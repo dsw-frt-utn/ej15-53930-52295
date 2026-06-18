@@ -52,4 +52,37 @@ public class DoctorsController : ControllerBase
             d.Speciality?.Name ?? String.Empty));
         return Ok(response);
     }
+
+    [HttpGet("{id:guid}")]
+    public async Task<IActionResult> GetDoctorById(Guid id)
+    {
+        var doctor = await _persistence.GetDoctorByIdAsync(id);
+        if (doctor == null || !doctor.IsActive)
+        {
+            return NotFound();
+        }
+
+        var response = new DoctorModel.Response(
+            doctor.Id,
+            doctor.Name,
+            doctor.LicenseNumber,
+            doctor.Speciality?.Name ?? String.Empty);
+        return Ok(response);
+    }
+
+    [HttpDelete("{id:guid}")]
+    public async Task<IActionResult> DeleteDoctor(Guid id)
+    {
+        var doctor = await _persistence.GetDoctorByIdAsync(id);
+
+        if (doctor == null || !doctor.IsActive)
+        {
+            return NotFound();
+        }
+
+        doctor.IsActive = false;
+        await _persistence.UpdateDoctorAsync(doctor);
+        return NoContent();
+    }
+
 }
