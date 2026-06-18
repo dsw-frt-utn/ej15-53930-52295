@@ -19,37 +19,37 @@ public class DoctorsController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> CreateDoctor([FromBody] DoctorModel.Request request) 
+    public async Task<IActionResult> CreateDoctor(DoctorModel.Request request)
     {
-      
+        
         if (string.IsNullOrWhiteSpace(request.Name))
-        {
-            throw new ValidationException("Name: requerido");
-        }
+            throw new ValidationException("El nombre es requerido.");
 
         if (string.IsNullOrWhiteSpace(request.LicenseNumber))
-        {
-            throw new ValidationException("License Number: requerido"); 
-        }
+            throw new ValidationException("La matrícula es requerida.");
 
         
         var speciality = await _persistence.GetSpecialityByIdAsync(request.SpecialityId);
-        if (speciality == null)
-        {
-            throw new ValidationException("SpecialityId: debe existir"); 
-        }
+        if (speciality is null)
+            throw new ValidationException("La especialidad especificada no existe.");
 
         
         var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
-
-        
         await _persistence.AddDoctorAsync(doctor);
 
-       
-        return Created(); 
+        
+        var response = new DoctorModel.Response(
+            doctor.Id,
+            doctor.Name,
+            doctor.LicenseNumber,
+            doctor.Speciality.Name
+        );
+
+        
+        return CreatedAtAction(nameof(GetDoctorById), new { id = doctor.Id }, response);
     }
 
-    
+
     [HttpGet]
     public async Task<IActionResult> GetaActiveDoctors() 
     {
