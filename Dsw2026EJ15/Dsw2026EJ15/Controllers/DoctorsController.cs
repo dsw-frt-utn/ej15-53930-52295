@@ -1,4 +1,5 @@
 ﻿using Dsw2026EJ15.Api.Models;
+using Dsw2026EJ15.Domain.Entities;
 using Dsw2026EJ15.Domain.Interfaces;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,7 @@ public class DoctorsController : ControllerBase
         {
             return BadRequest("Nombre y matricula son requeridos");
         }
-        
+
         var speciality = _persistence.GetSpecialityById(request.SpecialityId);
         if (speciality == null)
         {
@@ -36,5 +37,19 @@ public class DoctorsController : ControllerBase
         _persistence.SaveDoctor(doctor);
 
         return Created();
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetaActiveDoctors(DoctorModel.Request request)
+    {
+        var doctors = await _persistence.GetDoctorsAsync();
+        var response = doctors
+            .Where(d => d.IsActive)
+            .Select(d => new DoctorModel.Response(
+            d.Id,
+            d.Name,
+            d.LicenseNumber,
+            d.Speciality?.Name ?? String.Empty));
+        return Ok(response);
     }
 }

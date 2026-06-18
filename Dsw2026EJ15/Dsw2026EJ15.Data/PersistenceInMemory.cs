@@ -51,6 +51,11 @@ namespace Dsw2026EJ15.Data
             _doctors.Add(doctor);
         }
 
+   
+
+
+
+
         public async Task<IEnumerable<Speciality>> GetSpecialitiesAsync() => await Task.FromResult(_specialities);
 
         public async Task<Speciality?> GetSpecialityByIdAsync(Guid id) => await Task.FromResult(_specialities.Find(s => s.Id == id));
