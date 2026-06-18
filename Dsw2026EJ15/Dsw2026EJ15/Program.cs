@@ -1,4 +1,7 @@
 
+using Dsw2026EJ15.Domain.Interfaces;
+using Dsw2026EJ15.Data;
+
 namespace Dsw2026EJ15
 {
     public class Program
@@ -11,14 +14,18 @@ namespace Dsw2026EJ15
 
             builder.Services.AddControllers();
             // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            builder.Services.AddOpenApi();
+            //builder.Services.AddOpenApi();
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
-                app.MapOpenApi();
+                //app.MapOpenApi();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseAuthorization();

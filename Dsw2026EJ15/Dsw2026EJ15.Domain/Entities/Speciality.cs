@@ -10,7 +10,11 @@ namespace Dsw2026EJ15.Domain.Entities
 
         public string Description { get; init; } = string.Empty;
 
-
+        public Speciality(string name, string description, Guid? id = null) : base(id)
+        {
+            Name = name;
+            Description = description;
+        }
 
     }
 }

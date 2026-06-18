@@ -3,15 +3,16 @@ using System.Collections.Generic;
 using Dsw2026EJ15.Domain.Interfaces;
 using System.Text.Json;
 using Dsw2026EJ15.Domain.Entities;
+using Dsw2026EJ15.Data.Dtos;
 
 namespace Dsw2026EJ15.Data
 {
-    public class PercistenceInMemory: IPersistence
+    public class PersistenceInMemory : IPersistence
     {
-        private readonly List<Speciality> _specialities = [];
+        private List<Speciality> _specialities = [];
 
-        private readonly List<Doctor> _doctors = [];
-        public PercistenceInMemory()
+        private List<Doctor> _doctors = [];
+        public PersistenceInMemory()
         {
 
             LoadSpecialities();
@@ -22,23 +23,32 @@ namespace Dsw2026EJ15.Data
         {
             try
             {
-                var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "specialities.json");
+                string jsonPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Sources", "specialities.json");
 
-                if (File.Exists(path)) return;
+                var json = File.ReadAllText(jsonPath);
 
-                var json = File.ReadAllText(path);
-
-                var list = JsonSerializer.Deserialize<List<Speciality>>(json);
-
-                if (list is not null)
+                var specialities = JsonSerializer.Deserialize<List<SpecialityDto>>(json, new JsonSerializerOptions()
                 {
-                    _specialities.AddRange(list);
-                }
+                    PropertyNameCaseInsensitive = true
+                }) ?? [];
+
+                _specialities = [.. specialities.Select(s => new Speciality(s.Name, s.Description, s.Id))];
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Error loading specialities: {ex.Message}");
             }
+        }
+
+        public Speciality? GetSpecialityById(Guid id)
+        {
+            return _specialities.SingleOrDefault(e => e.Id == id);
+        }
+
+        public void SaveDoctor(Doctor doctor)
+        {
+            _doctors.Add(doctor);
         }
 
         public async Task<IEnumerable<Speciality>> GetSpecialitiesAsync() => await Task.FromResult(_specialities);
