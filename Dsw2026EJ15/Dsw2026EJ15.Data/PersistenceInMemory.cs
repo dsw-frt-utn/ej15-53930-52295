@@ -60,9 +60,9 @@ namespace Dsw2026EJ15.Data
 
         public async Task<Speciality?> GetSpecialityByIdAsync(Guid id) => await Task.FromResult(_specialities.Find(s => s.Id == id));
 
-        public async Task<IEnumerable<Doctor>> GetDoctorsAsync() => await Task.FromResult(_doctors);
+        public async Task<IEnumerable<Doctor>> GetDoctorsAsync() => await Task.FromResult(_doctors.Where(d => d.IsActive));
 
-        public async Task<Doctor?> GetDoctorByIdAsync(Guid id) => await Task.FromResult(_doctors.Find(d => d.Id == id));
+        public async Task<Doctor?> GetDoctorByIdAsync(Guid id) => await Task.FromResult(_doctors.Find(d => d.Id == id && d.IsActive));
 
         public async Task AddDoctorAsync(Doctor doctor)
         {

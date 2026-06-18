@@ -1,6 +1,7 @@
 
 using Dsw2026EJ15.Domain.Interfaces;
 using Dsw2026EJ15.Data;
+using Dsw2026EJ15.Api.Middleware;
 
 namespace Dsw2026EJ15
 {
@@ -30,6 +31,9 @@ namespace Dsw2026EJ15
 
             app.UseAuthorization();
 
+            app.UseMiddleware<ExceptionMiddleware>();
+
+            app.MapGet("/health-check", () => Results.Content("Healthy", "text/plain"));
 
             app.MapControllers();
 
