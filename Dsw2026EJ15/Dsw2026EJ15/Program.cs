@@ -1,8 +1,8 @@
 
 using Dsw2026EJ15.Domain.Interfaces;
 using Dsw2026EJ15.Data;
-using Dsw2026EJ15.Api.Middleware;
-
+using Dsw2026EJ15.Api;
+using Dsw2026Ej15.Api.Middlewares;
 namespace Dsw2026EJ15
 {
     public class Program
