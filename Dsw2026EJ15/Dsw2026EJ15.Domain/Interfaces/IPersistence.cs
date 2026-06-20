@@ -6,20 +6,15 @@ using System.Text;
 namespace Dsw2026EJ15.Domain.Interfaces
 {
     public interface IPersistence
-    {
-
+    { 
+        
+        IEnumerable<Speciality> GetSpecialities();
         Speciality? GetSpecialityById(Guid id);
 
+        IEnumerable<Doctor> GetDoctors();
+        Doctor? GetDoctorById(Guid id);
+
         void SaveDoctor(Doctor doctor);
-        
-        
-        Task<IEnumerable<Speciality>> GetSpecialitiesAsync();
-        Task<Speciality?> GetSpecialityByIdAsync(Guid id);
-
-        Task<IEnumerable<Doctor>> GetDoctorsAsync();
-        Task<Doctor?> GetDoctorByIdAsync(Guid id);
-
-        Task AddDoctorAsync(Doctor doctor);
-        Task UpdateDoctorAsync(Doctor doctor);
+        void UpdateDoctor(Doctor doctor);
     }
 }

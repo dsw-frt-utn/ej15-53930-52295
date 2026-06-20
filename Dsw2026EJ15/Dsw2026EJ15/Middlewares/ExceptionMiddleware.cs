@@ -28,6 +28,10 @@ namespace Dsw2026Ej15.Api.Middlewares
                
                 await HandleExceptionAsync(context, ex);
             }
+            catch(NotFoundException ex)
+            {
+                await HandleExceptionAsync(context, ex);
+            }
         }
 
         private async Task HandleExceptionAsync(HttpContext context, Exception ex)
@@ -37,11 +41,16 @@ namespace Dsw2026Ej15.Api.Middlewares
 
             if (ex is ValidationException ve)
             {
-                status = HttpStatusCode.BadRequest; // Código 400
+                status = HttpStatusCode.BadRequest;
                 message = ve.Message;
             }
+            if (ex is NotFoundException)
+            {
+                status = HttpStatusCode.NotFound;
+                message = ex.Message;
+            }
 
-            
+
             var result = JsonSerializer.Serialize(new { error = message });
 
             context.Response.ContentType = "application/json";

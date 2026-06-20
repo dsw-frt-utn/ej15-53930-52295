@@ -46,38 +46,25 @@ namespace Dsw2026EJ15.Data
             return _specialities.SingleOrDefault(e => e.Id == id);
         }
 
+        
+        public IEnumerable<Speciality> GetSpecialities() => _specialities;
+
+        public IEnumerable<Doctor> GetDoctors() => _doctors.Where(d => d.IsActive);
+
+        public Doctor? GetDoctorById(Guid id) => _doctors.Find(d => d.Id == id && d.IsActive);
+
         public void SaveDoctor(Doctor doctor)
         {
             _doctors.Add(doctor);
         }
 
-   
-
-
-
-
-        public async Task<IEnumerable<Speciality>> GetSpecialitiesAsync() => await Task.FromResult(_specialities);
-
-        public async Task<Speciality?> GetSpecialityByIdAsync(Guid id) => await Task.FromResult(_specialities.Find(s => s.Id == id));
-
-        public async Task<IEnumerable<Doctor>> GetDoctorsAsync() => await Task.FromResult(_doctors.Where(d => d.IsActive));
-
-        public async Task<Doctor?> GetDoctorByIdAsync(Guid id) => await Task.FromResult(_doctors.Find(d => d.Id == id && d.IsActive));
-
-        public async Task AddDoctorAsync(Doctor doctor)
-        {
-            _doctors.Add(doctor);
-            await Task.CompletedTask;
-        }
-
-        public async Task UpdateDoctorAsync(Doctor doctor)
+        public void UpdateDoctor(Doctor doctor)
         {
             var index = _doctors.FindIndex(d => d.Id == doctor.Id);
             if (index != -1)
             {
                 _doctors[index] = doctor;
             }
-            await Task.CompletedTask;
         }
 
     }

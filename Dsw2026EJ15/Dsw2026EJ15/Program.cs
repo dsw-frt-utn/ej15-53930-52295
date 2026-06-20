@@ -11,11 +11,10 @@ namespace Dsw2026EJ15
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
 
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-            //builder.Services.AddOpenApi();
+           
+            builder.Services.AddHealthChecks();
             builder.Services.AddSwaggerGen();
             builder.Services.AddSingleton<IPersistence, PersistenceInMemory>();
 
@@ -33,7 +32,7 @@ namespace Dsw2026EJ15
 
             app.UseMiddleware<ExceptionMiddleware>();
 
-            app.MapGet("/health-check", () => Results.Content("Healthy", "text/plain"));
+            app.MapHealthChecks("/health");
 
             app.MapControllers();
 

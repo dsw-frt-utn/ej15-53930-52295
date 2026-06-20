@@ -29,13 +29,13 @@ public class DoctorsController : ControllerBase
             throw new ValidationException("La matrícula es requerida.");
 
         
-        var speciality = await _persistence.GetSpecialityByIdAsync(request.SpecialityId);
+        var speciality =  _persistence.GetSpecialityById(request.SpecialityId);
         if (speciality is null)
             throw new ValidationException("La especialidad especificada no existe.");
 
         
         var doctor = new Doctor(request.Name, request.LicenseNumber, speciality);
-        await _persistence.AddDoctorAsync(doctor);
+        _persistence.SaveDoctor(doctor);
 
         
         var response = new DoctorModel.Response(
@@ -54,7 +54,7 @@ public class DoctorsController : ControllerBase
     public async Task<IActionResult> GetaActiveDoctors() 
     {
        
-        var doctors = await _persistence.GetDoctorsAsync();
+        var doctors = _persistence.GetDoctors();
 
         var response = doctors.Select(d =>
         {
@@ -74,12 +74,12 @@ public class DoctorsController : ControllerBase
     public async Task<IActionResult> GetDoctorById(Guid id)
     {
        
-        var doctor = await _persistence.GetDoctorByIdAsync(id);
+        var doctor = _persistence.GetDoctorById(id);
 
         
         if (doctor == null)
         {
-            return NotFound();
+            throw new NotFoundException("Doctor no encontrado.");
         }
 
         var response = new DoctorModel.Response(
@@ -96,7 +96,7 @@ public class DoctorsController : ControllerBase
     public async Task<IActionResult> DeleteDoctor(Guid id)
     {
         
-        var doctor = await _persistence.GetDoctorByIdAsync(id);
+        var doctor = _persistence.GetDoctorById(id);
 
         if (doctor == null)
         {
@@ -107,7 +107,7 @@ public class DoctorsController : ControllerBase
         doctor.IsActive = false;
 
         
-        await _persistence.UpdateDoctorAsync(doctor);
+        _persistence.UpdateDoctor(doctor);
 
         return NoContent();
     }
