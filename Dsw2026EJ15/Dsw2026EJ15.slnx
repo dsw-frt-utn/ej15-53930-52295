@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Dsw2026EJ15.Data/Dsw2026EJ15.Data.csproj" />
+  <Project Path="Dsw2026EJ15.Domain/Dsw2026EJ15.Domain.csproj" />
+  <Project Path="Dsw2026EJ15/Dsw2026EJ15.Api.csproj" />
+</Solution>
